@@ -39,11 +39,9 @@
 
 </section>
 
-<div id="tagsEl">
+<!-- <div id="tagsEl">
     <div class="tag">action</div>
-    <div class="tag">action</div>
-    <div class="tag">action</div>
-</div>
+</div> -->
 
 <!-- <section class="s1">
     <h4>Movies</h4>
@@ -52,6 +50,8 @@
 
 <section class="s1">
     <h4>Trending Today</h4>
+    <!-- <a href="#top-rated"><h4>Top Rated</h4></a> -->
+   
 </section>
 
 <main id="trending">
@@ -61,8 +61,8 @@
     </div>
 
     <div class="overview">
-        <i class="fa-solid fa-play"></i>
-        <i class="fa-solid fa-circle-info"></i>
+       <i class="fa-solid fa-play" id="play"></i>
+       <a class="active" href="watchMovies.html"><i class="fa-solid fa-circle-info" id="info"></i></a>
     </div>
 
     <div class="overview">
@@ -72,7 +72,11 @@
     </div>
 </main>
 
-<!-- <main id="showsList">
+<section class="s1">
+    <h4><a id="top-rated">Top Rated</a></h4>
+</section>
+
+<main id="topRatedM">
     <div class="movie-info">
         <h3>Movie Title</h3>
         <span class="green">9.8</span>
@@ -83,7 +87,83 @@
         Laudantium accusantium earum non quas saepe aliquam 
         asperiores doloribus illo omnis repudiandae.
     </div>
-</main> -->
+</main>
+
+<main id="topRatedS">
+    <div class="movie-info">
+        <h3>Movie Title</h3>
+        <span class="green">9.8</span>
+    </div>
+
+    <div class="overview">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+        Laudantium accusantium earum non quas saepe aliquam 
+        asperiores doloribus illo omnis repudiandae.
+    </div>
+</main>
+
+<div id="popup-container" class="popup-container">
+    <!-- <span class="x-icon">&#10006</span>
+    <div class="content">
+        <div class="left">
+            <div class="poster-img">
+                <img src="https://unsplash.it/500/1000" alt="" srcset="">
+            </div>
+            <div class="single-info">
+                <span>Add to fav:</span>
+                <span class="heart-icon">&#9829</span>
+            </div>
+        </div>
+        <div class="right">
+            <h1>title</h1>
+            <h1>tagline</h1>
+            <div class="single-info-container">
+                <div class="single-info">
+                    <span>language</span>
+                    <span>English</span>
+                </div>
+                <div class="single-info">
+                    <span>length</span>
+                    <span>120 mins</span>
+                </div>
+                <div class="single-info">
+                    <span>rate</span>
+                    <span>10/10</span>
+                </div>
+                <div class="single-info">
+                    <span>budget</span>
+                    <span>13500000$</span>
+                </div>
+                <div class="single-info">
+                    <span>rekaease date</span>
+                    <span>08-09-2020</span>
+                </div>
+            </div>
+            <div class="genres">
+                <h2>Genres</h2>
+                <ul>
+                    <li>Action</li>
+                    <li>Drama</li>
+                    <li>Romance</li>
+                </ul>
+            </div>
+            <div class="movie-overview">
+                <h2>overview</h2>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi inventore animi optio
+                    , iusto ducimus magnam provident natus, enim quod reiciendis to
+                    tam ab rerum commodi consectetur. A repellat labore natus ducimus?</p>
+            </div>
+            <div class="trailer">
+                <h2>Trailer</h2>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/${key}" 
+                        title="youtube" class="embed hide" frameborder="0" allow="accelerometer; autoplay; 
+                        clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
+                        web-share" allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+    </div> -->
+</div>
 
 
 <footer class="section-p1">
