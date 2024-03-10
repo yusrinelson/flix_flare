@@ -126,7 +126,7 @@ function fetchData(url, displayElement) {
             // }
             if(data.results.length && displayData !== 0){
                 displayData(data.results, displayElement);
-                // console.log(data.results)
+                console.log(data.results)
             }else{
                 if(displayElement){
                     displayElement.innerHTML = `<h1 class="no-results">NO RESULTS FOUND<h1>`
@@ -168,7 +168,7 @@ function displayData(data, displayElement) {
 
                 openNav()
                 //diffirenciate from a movie to tv and display the specific data
-                if(media_type === "tv"){  
+                if(name){  
                     show_popup1(id)
                     console.log(media_type)
                 }else{
@@ -440,6 +440,7 @@ if(form){
     form.addEventListener("input", searchMovie);   
     form.addEventListener("submit", searchMovie);
 }       
+
 
 
 // Initial data fetching
