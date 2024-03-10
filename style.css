@@ -428,7 +428,7 @@ footer .copyright{
 .popup-container {
     position: fixed;
     height: 100%;
-    /* width: 0; */
+    width: 100%;
     top: 0;
     z-index: 9999;
     /* background: linear-gradient(rgba(1, 1, 1, .7), var(--primary-color)), url(https://unsplash.it/1600/900); */
@@ -575,4 +575,116 @@ footer .copyright{
 }
 .movie-overview{
     width: 70%;
+}
+
+
+/* Contact Page*/
+
+#form-details form span{
+    font-size: 12px;
+    color: #606063;
+}
+
+#form-details form h2{
+    font-size: 26px;
+    line-height: 35px;
+    padding: 20px 0;
+}
+
+#form-details{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px;
+    padding: 80px;
+    border: 1px solid #e1e1e1;
+}
+
+#form-details form {
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+#form-details form input, #form-details form textarea{
+    width: 100%;
+    padding: 12px 15px;
+    outline: none;
+    margin-bottom: 20px;
+    border: 1px solid #e1e1e1;
+    background: var(--secondary-color);
+    resize: none;
+    color: #fff;
+}
+#form-details form button{
+    background-color: #088178;
+    color: #fff;
+}
+
+button.normal{
+    font-size: 14px;
+    font-weight: 600;
+    padding: 15px 30px;
+    color: #000;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    border:none;
+    outline: none;
+    transition: 0.2s;
+}
+
+
+#newsletter{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-position: 20% 30%;
+    background-color: var(--secondary-color);
+    padding: 50px 20px;
+}
+#newsletter h4{
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+}
+#newsletter p{
+    font-size: 14px;
+    font-weight: 600;
+    color: #848282;
+}
+
+#newsletter p span{
+    color: #d1c814;
+}
+
+#newsletter input{
+    height: 3.125rem;
+    padding: 0 1.25rem;
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    outline: none;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+#newsletter button{
+    background-color: #088178;
+    color: #fff;
+    white-space: nowrap;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+#newsletter .form{
+    display: flex;
+    width: 40%;
+}
+#hero.contact{
+    background-image: url("https://images.unsplash.com/photo-1577563908411-5077b6dc7624?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
+    background-position: center;
+    background-size: cover;
 }

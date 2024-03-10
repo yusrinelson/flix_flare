@@ -141,9 +141,8 @@ function displayData(data, displayElement) {
     if (displayElement) {
         displayElement.innerHTML = "";
     }
-
     data.slice(0, 18).forEach(item => {
-        const { title, poster_path, vote_average, overview, id, release_date, name, first_air_date} = item;
+        const { title, poster_path, vote_average, media_type, id, release_date, name, first_air_date} = item;
         const element = document.createElement("div");
         element.classList.add("movie");
         element.innerHTML = `
@@ -168,8 +167,15 @@ function displayData(data, displayElement) {
                 console.log("clicked" + id); 
 
                 openNav()
-                show_popup(id)
-                })
+                //diffirenciate from a movie to tv and display the specific data
+                if(media_type === "tv"){  
+                    show_popup1(id)
+                    console.log(media_type)
+                }else{
+                    show_popup(id)
+                    console.log(media_type);
+                }
+            })
 
         }
 
@@ -240,13 +246,12 @@ async function show_popup(id) {
                 
             </div>
             <div class="trailer">
-            <h2>Trailer</h2>
-                    <iframe width="560" height="315" src="https://www.youtube.com/embed/${movie_trailer}" 
-                            title="youtube" class="embed hide" frameborder="0" allow="accelerometer; autoplay; 
-                            clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
-                            web-share" allowfullscreen>
-                    </iframe>
-                </div>
+                <h2>Trailer</h2>
+                ${movie_trailer ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${movie_trailer}" 
+                    title="youtube" class="embed hide" frameborder="0" allow="accelerometer; autoplay; 
+                    clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
+                    web-share" allowfullscreen></iframe>` : `<img src="http://via.placeholder.com/1080x1580" width="300px" alt="No Trailer Available">`}
+            </div>
         </div>        
         
         `
@@ -262,6 +267,92 @@ async function show_popup(id) {
         // Handle the error accordingly, e.g., show an error message to the user
     }
 }
+async function show_popup1(tv_id) {
+    popup_container.classList.add("show-popup"); // Shows modal when clicked
+    document.body.style.overflow = "hidden"
+    
+     // Get id of movie
+    console.log(tv_id);
+
+    try {
+        if(popup_container){
+            popup_container.innerHTML = ""
+            popup_container.style.backgroundImage = '';
+
+        }
+        const tv = await get_tv_by_id(tv_id);
+        const tv_trailer = await get_tv_by_trailer(tv_id);
+        console.log(tv_trailer , tv);
+        popup_container.style.backgroundImage= `linear-gradient(rgba(1, 1, 1, .8), var(--primary-color)), url(${IMG_URL + tv.poster_path})`
+
+
+        popup_container.innerHTML = `
+        <span class="x-icon">&#10006</span>
+        <div class="content">
+            <div class="left">
+                <div class="poster-img">
+                    <img src="${IMG_URL + tv.poster_path}" alt="http://via.placeholder.com/1080x1580" >
+                </div>
+                <div class="single-info">
+                    <span class="heart-icon"><i class="fa-regular fa-heart"></i></i></span>
+                </div>
+            </div>
+            <div class="right">
+                <h1>${tv.name}</h1>
+                <h3>${tv.tagline}</h3>
+                <div class="single-info-container">
+                    <div class="single-info">
+                        <ul>
+                            <li><span><i class="fa-solid fa-language"></i></span>
+                            <span>${tv.spoken_languages[0].name}</span></li>
+
+                            <li><span><i class="fa-solid fa-clock-rotate-left"></i></span>
+                            <span>Seasons <strong>${tv.number_of_seasons}</strong></span></li>
+
+                            <li><span><i class="fa-solid fa-star"></i></span>
+                            <span>${tv.vote_average.toFixed(1)}/10</span></li>
+
+                            <li><span><i class="fa-regular fa-calendar-days"></i></span>
+                            <span>${tv.first_air_date}</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="genres">
+                    
+                    <ul>
+                    <h2>Genres:</h2>${tv.genres.map(e => `<li>${e.name}<l/>`)}
+                    </ul>
+                </div>
+                <div class="movie-overview">
+                    <h2>overview</h2>
+                    <p>${tv.overview}</p>
+                </div>
+                
+            </div>
+            <div class="trailer">
+            <h2>Trailer</h2>
+            ${tv_trailer ? `<iframe width="560" height="315" src="https://www.youtube.com/embed/${tv_trailer}" 
+                title="youtube" class="embed hide" frameborder="0" allow="accelerometer; autoplay; 
+                clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
+                web-share" allowfullscreen></iframe>` : `<img src="http://via.placeholder.com/1080x1580" width="300px"alt="No Trailer Available">`}
+        </div>
+        </div>        
+        
+        `
+        const x_icon = document.querySelector(".x-icon")
+        x_icon.addEventListener("click", () => {
+            popup_container.classList.remove("show-popup");
+            document.body.style.overflow = "auto";
+        })
+
+    } 
+    catch (error) {
+        console.error("Error fetching movie data:", error);
+        // Handle the error accordingly, e.g., show an error message to the user
+    }
+}
+
+
 async function get_movie_by_id(id) {
     try {
         const response = await fetch(`${BASE_URL}/movie/${id}?${API_KEY}`);
@@ -274,9 +365,9 @@ async function get_movie_by_id(id) {
         throw error;
     }
 }
-async function get_tv_by_id(id) {
+async function get_tv_by_id(tv_id) {
     try {
-        const response = await fetch(`${BASE_URL}/tv/${id}?${API_KEY}`);
+        const response = await fetch(`${BASE_URL}/tv/${tv_id}?${API_KEY}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -293,6 +384,11 @@ async function get_movie_by_trailer(movie_id) {
     try {
         const response = await fetch(`${BASE_URL}/movie/${movie_id}/videos?${API_KEY}`);
         const data = await response.json();
+
+                // Check if results array is empty or undefined
+                if (!data.results || data.results.length === 0) {
+                    return null; // Return null if no trailers are available
+                }
         // Assuming the trailer is the first item in the results array
         const trailer_key = data.results[0].key;
         return trailer_key;
@@ -301,26 +397,29 @@ async function get_movie_by_trailer(movie_id) {
         throw error; // Rethrow the error to be caught by the caller
     }
 }
-// get_movie_by_trailer(848538)
+async function get_tv_by_trailer(tv_id) {
+    try {
+        const response = await fetch(`${BASE_URL}/tv/${tv_id}/videos?${API_KEY}`);
+        const data = await response.json();
 
-
-
-
-
-function openNav(){
-    document.getElementById("popup-container").style.width = "100%";
-    // document.body.style.overflow = "hidden"
+            // Check if results array is empty or undefined
+            if (!data.results || data.results.length === 0) {
+                return null; // Return null if no trailers are available
+            }
+        // Assuming the trailer is the first item in the results array
+        const trailer_key = data.results[0].key;
+        return trailer_key;
+    } catch (error) {
+        console.error("Error fetching movie trailer:", error);
+        throw error; // Rethrow the error to be caught by the caller
+    }
 }
 
-// function closeNav(){
-//     document.getElementById("popup-container").style.width = "0%"
-// }
-
-
-
-
-
-/**END OF MODAL */
+function openNav(){
+    document.getElementById("popup-container");
+    // document.body.style.overflow = "hidden"
+}
+//END OF MODAL
 
 function searchMovie(e) {
 
@@ -342,10 +441,10 @@ if(form){
     form.addEventListener("submit", searchMovie);
 }       
 
-let id
+
 // Initial data fetching
-const API_URL = BASE_URL + "/discover/movie?sort_by=popularity.desc&" + API_KEY;
-const API_URL1 = BASE_URL + "/discover/tv?sort_by=popularity.desc&" + API_KEY;
+const API_URL = BASE_URL + "/movie/upcoming?" + API_KEY;
+const API_URL1 = BASE_URL + "/tv/airing_today?" + API_KEY;
 const API_URL2 = BASE_URL + "/trending/all/day?" + API_KEY;
 const API_TOP_RATEDM = BASE_URL + "/movie/top_rated?" + API_KEY;
 const API_TOP_RATEDS = BASE_URL + "/tv/top_rated?" + API_KEY;
@@ -369,232 +468,3 @@ function getColor(vote) {
         return "red";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const API_KEY = "api_key=08d943b4426aa0e660b5bb62055f4e11";
-// const BASE_URL = "https://api.themoviedb.org/3"
-// const API_URL = BASE_URL + "/discover/movie?sort_by=popularity.desc&" + API_KEY
-// const API_URL1 = BASE_URL + "/discover/tv?sort_by=popularity.desc&" + API_KEY
-// const API_URL2 = BASE_URL + "/trending/all/day?" + API_KEY
-// const IMG_URL = "https://image.tmdb.org/t/p/w500"
-// const SEARCH_URL = BASE_URL + "/search/movie?" + API_KEY;
-
-// const movieList = document.getElementById("movieList");
-// const trending = document.getElementById("trending")
-// const showsList = document.getElementById("showsList");
-// const hero = document.getElementById("hero");
-// const form = document.getElementById("form");
-// const search = document.getElementById("search");
-// // const tagsEl = document.getElementById("tagsEl");
-
-// getTrending(API_URL2)
-// getMovies(API_URL);
-// getShows(API_URL1);
-
-
-// function getTrending(url){
-//     //     lastUrl = url
-//         fetch(url).then(res => res.json()).then(data => {
-//             console.log(data)
-//                 showTrending(data.results);
-//         })
-//     }
-// function getMovies(url){
-// //     lastUrl = url
-//     fetch(url).then(res => res.json()).then(data => {
-//         console.log(data)
-//         // if(data.results.length !== 0){
-//             showMovies(data.results);
-            
-//             // currentPage = data.page;
-//             // prevPage = currentPage - 1
-//             // nextPage = currentPage + 1;
-//             // totalPages = data.total_pages;
-
-//             // current.innerText = currentPage
-//             // if(currentPage <= 1){
-//             //     prev.classList.add("disabled");
-//             //     next.classList.remove("disabled");
-//             // }else if(currentPage >= totalPages){
-//             //     prev.classList.remove("disabled");
-//             //     next.classList.add("disabled");
-//             // }else{
-//             //     prev.classList.remove("disabled");
-//             //     next.classList.remove("disabled");
-//             // }
-//             // tagsEl.scrollIntoView({behavior : "smooth"})
-
-// //         }else{
-//             // main.innerHTML = `<h1 class="no-results">NO RESULTS FOUND<h1>`
-//         // }
-//     })
-// }
-// function getShows(url){
-//     fetch(url).then(res => res.json()).then(data => {
-//         console.log(data)
-//         showShows(data.results);
-//     })
-// }
-
-// function showTrending(data){
-//     if(trending){
-//         trending.innerHTML = "";
-//     }
-
-//     data.slice(0,18).forEach(movie => {
-//         const {title, poster_path, vote_average,overview, id, release_date } = movie
-//         const movieEl = document.createElement("div");
-//         movieEl.classList.add("movie");
-//         movieEl.innerHTML = `
-//         <img src="${poster_path? IMG_URL + poster_path: "http://via.placeholder.com/1080x1580"}" alt="${title}" srcset="">
-//         <div class="movie-info">
-//             <h3>${title}</h3>
-//             <h5>${release_date}<h5>
-//             <span class="${getColor(vote_average)}">${vote_average.toFixed(1)}</span>
-//         </div>
-
-//         <div class="overview">
-//             <i class="fa-solid fa-play"></i>
-//             <i class="fa-solid fa-circle-info"></i>
-//         </div>
-
-//         `
-//         if(trending){
-//             trending.appendChild(movieEl);
-//         }
-        
-  
-//         // document.getElementById(id).addEventListener("click", () =>{
-//         //     console.log(id) "/oBIQDKcqNxKckjugtmzpIIOgoc4.jpg"
-//         //     openNav(movie)
-//         // })
-//     })
-// }
-// function showMovies(data){
-//     if(movieList){
-//         movieList.innerHTML = "";
-//     }
-
-//     data.slice(0,18).forEach(movie => {
-//         const {title, poster_path, vote_average,overview, id, release_date } = movie
-//         const movieEl = document.createElement("div");
-//         movieEl.classList.add("movie");
-//         movieEl.innerHTML = `
-//         <img src="${poster_path? IMG_URL + poster_path: "http://via.placeholder.com/1080x1580"}" alt="${title}" srcset="">
-//         <div class="movie-info">
-//             <h3>${title}</h3>
-//             <h5>${release_date}<h5>
-//             <span class="${getColor(vote_average)}">${vote_average.toFixed(1)}</span>
-//         </div>
-
-//         <div class="overview">
-//             <i class="fa-solid fa-play"></i>
-//             <i class="fa-solid fa-circle-info"></i>
-//         </div>
-
-//         `
-//         if(movieList){
-//             movieList.appendChild(movieEl);
-//         }
-        
-  
-//         // document.getElementById(id).addEventListener("click", () =>{
-//         //     console.log(id) "/oBIQDKcqNxKckjugtmzpIIOgoc4.jpg"
-//         //     openNav(movie)
-//         // })
-//     })
-// }
-// function showShows(data){
-//     if(showsList){
-//         showsList.innerHTML = "";
-//     }
-
-//     data.slice(0,18).forEach(movie => {
-//         const {poster_path, vote_average,overview, id,name, first_air_date } = movie
-//         const movieEl = document.createElement("div");
-//         movieEl.classList.add("movie");
-//         movieEl.innerHTML = `
-//         <img src="${poster_path? IMG_URL + poster_path: "http://via.placeholder.com/1080x1580"}" alt="${name}" srcset="">
-//         <div class="movie-info">
-//             <h3>${name}</h3>
-//             <h5>${first_air_date.substring(0,4)}<h5>
-//             <span class="${getColor(vote_average)}">${vote_average.toFixed(1)}</span>
-//         </div>
-//         <div class="overview">
-//             <i class="fa-solid fa-play"></i>
-//             <i class="fa-solid fa-circle-info"></i>
-//         </div>
-
-       
-//         `
-
-//         if (showsList) { // Check again before appending
-//             showsList.appendChild(movieEl);
-//         }
-
-//         // document.getElementById(id).addEventListener("click", () =>{
-//         //     console.log(id) "/oBIQDKcqNxKckjugtmzpIIOgoc4.jpg"
-//         //     openNav(movie)
-//         // })
-//     })
-// }
-
-
-// function searchMovie(e){
-//     e.preventDefault();
-
-//     const searchTerm = search.value.trim()
-
-//     if(searchTerm){
-//         getMovies(SEARCH_URL + "&query=" + searchTerm) ||
-// getShows( BASE_URL + "/search/tv?" + API_KEY + "&query=" + searchTerm)
-//     }else{
-//         getMovies(API_URL) || getShows(API_URL1)
-//     }
-    
-// }
-// form.addEventListener("input", searchMovie)
-
-// function getColor(vote){
-//     if(vote >= 8){
-//         return "green"
-//     }else if(vote >= 5){
-//         return "orange"
-//     }else{
-//         return "red"
-//     }
-// }
