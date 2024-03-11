@@ -240,7 +240,7 @@ async function show_popup(id) {
                     </ul>
                 </div>
                 <div class="movie-overview">
-                    <h2>overview</h2>
+                    <h2>Overview</h2>
                     <p>${movie.overview}</p>
                 </div>
                 
@@ -430,6 +430,14 @@ function searchMovie(e) {
         fetchData(SEARCH_URL + "&query=" + searchTerm, movieList);
         fetchData(BASE_URL + "/search/tv?" + API_KEY + "&query=" + searchTerm, showsList);
         fetchData(BASE_URL + "/search/multi?" + API_KEY + "&query=" + searchTerm, trending);
+
+        topRatedM.style.display = "none";    //removes when search in progress
+        topRatedS.style.display = "none";
+        const elementsToRemove = document.querySelectorAll(".s1");
+        elementsToRemove.forEach(element => {
+        element.parentNode.removeChild(element);
+    });
+
     } else {
         fetchData(API_URL, movieList);   // Fetch original movie data
         fetchData(API_URL1, showsList); 
