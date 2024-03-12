@@ -12,7 +12,6 @@ const search = document.getElementById("search");
 const tagsEl = document.getElementById("tagsEl");
 const topRatedM = document.getElementById("topRatedM");
 const topRatedS = document.getElementById("topRatedS");
-const similarMoviesList = document.getElementById("similarMoviesList");
 
 const popup_container = document.getElementById("popup-container");
 
@@ -183,10 +182,11 @@ function displayData(data, displayElement) {
 
 }
 
+/**MODAL */
 async function show_popup(id) {
     popup_container.classList.add("show-popup"); // Shows modal when clicked
     document.body.style.overflow = "hidden"
-    
+
     const movie_id = id; // Get id of movie
     console.log(movie_id);
 
@@ -196,6 +196,7 @@ async function show_popup(id) {
             popup_container.style.backgroundImage = '';
 
         }
+        const similar = await similar_movie(movie_id)
         const movie = await get_movie_by_id(movie_id);
         const movie_trailer = await get_movie_by_trailer(movie_id);
         console.log(movie_trailer , movie);
@@ -203,6 +204,7 @@ async function show_popup(id) {
 
 
         popup_container.innerHTML = `
+        <main id="modal">
         <span class="x-icon">&#10006</span>
         <div class="content">
             <div class="left">
@@ -252,9 +254,54 @@ async function show_popup(id) {
                     clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
                     web-share" allowfullscreen></iframe>` : `<img src="http://via.placeholder.com/1080x1580" width="300px" alt="No Trailer Available">`}
             </div>
-        </div>        
-        
+
+            <section class="s1">
+                <h2>Similar Movies</h2>
+            </section>
+            <div id="similarMoviesList"></div> 
+        </div>
+        </main>
         `
+        const similarMoviesList = document.getElementById("similarMoviesList");
+
+        similar.forEach(similarMovie => {
+            const {poster_path,title,release_date,vote_average,id, name, media_type} = similarMovie
+            const similarElement = document.createElement("div");
+            similarElement.classList.add("movie");
+            similarElement.innerHTML = `
+            <img src="${poster_path ? IMG_URL + poster_path : "http://via.placeholder.com/1080x1580" }" width="300px" alt="${title}" srcset="">
+            <div class="movie-info">
+                <h3>${title}</h3>
+                <h5>${release_date ? release_date.substring(0, 4) : "N/A"}</h5>
+                <span class="${getColor(vote_average)}">${vote_average ? vote_average.toFixed(1) : vote_average ? vote_average.toFixed(1) : "N/A" }</span>
+            </div>
+            <div class="overview">
+                <i class="fa-solid fa-play" id="info"></i>
+                <i class="fa-solid fa-circle-info" id="${id}"></i>
+            </div>
+
+            `
+            similarMoviesList.appendChild(similarElement);
+            
+            if(document.getElementById(id)){
+                document.getElementById(id).addEventListener("click", () =>{
+                    console.log("clicked" + id); 
+
+                openNav()
+                //diffirenciate from a movie to tv and display the specific data
+                if(name){  
+                    show_popup1(id)
+                    console.log(media_type)
+                }else{
+                    show_popup(id)
+                    console.log(media_type);
+                }
+
+                })
+    
+            }
+        })
+
         const x_icon = document.querySelector(".x-icon")
         x_icon.addEventListener("click", () => {
             popup_container.classList.remove("show-popup");
@@ -280,6 +327,7 @@ async function show_popup1(tv_id) {
             popup_container.style.backgroundImage = '';
 
         }
+        const similar = await similar_tv(tv_id)
         const tv = await get_tv_by_id(tv_id);
         const tv_trailer = await get_tv_by_trailer(tv_id);
         console.log(tv_trailer , tv);
@@ -335,10 +383,56 @@ async function show_popup1(tv_id) {
                 title="youtube" class="embed hide" frameborder="0" allow="accelerometer; autoplay; 
                 clipboard-write; encrypted-media; gyroscope; picture-in-picture; 
                 web-share" allowfullscreen></iframe>` : `<img src="http://via.placeholder.com/1080x1580" width="300px"alt="No Trailer Available">`}
-        </div>
+            </div>
+
+            <section class="s1">
+                <h2>Similar Shows</h2>
+            </section>
+            <div id="similarMoviesList"></div> 
         </div>        
         
         `
+        const similarMoviesList = document.getElementById("similarMoviesList");
+
+        similar.forEach(similarMovie => {
+            const {poster_path,title,release_date,vote_average,id, name, media_type, first_air_date} = similarMovie
+            const similarElement = document.createElement("div");
+            similarElement.classList.add("movie");
+            similarElement.innerHTML = `
+            <img src="${poster_path ? IMG_URL + poster_path : "http://via.placeholder.com/1080x1580" }" width="300px" alt="${title}" srcset="">
+            <div class="movie-info">
+                <h3>${name}</h3>
+                <h5>${first_air_date ? first_air_date.substring(0, 4) : "N/A"}</h5>
+                <span class="${getColor(vote_average)}">${vote_average ? vote_average.toFixed(1) : vote_average ? vote_average.toFixed(1) : "N/A" }</span>
+            </div>
+            <div class="overview">
+                <i class="fa-solid fa-play" id="info"></i>
+                <i class="fa-solid fa-circle-info" id="${id}"></i>
+            </div>
+
+            `
+            
+            similarMoviesList.appendChild(similarElement);
+            
+            if(document.getElementById(id)){
+                document.getElementById(id).addEventListener("click", () =>{
+                    console.log("clicked" + id); 
+
+                openNav()
+                //diffirenciate from a movie to tv and display the specific data
+                if(name){  
+                    show_popup1(id)
+                    console.log(media_type)
+                }else{
+                    show_popup(id)
+                    console.log(media_type);
+                }
+
+                })
+    
+            }
+        })
+        
         const x_icon = document.querySelector(".x-icon")
         x_icon.addEventListener("click", () => {
             popup_container.classList.remove("show-popup");
@@ -351,7 +445,6 @@ async function show_popup1(tv_id) {
         // Handle the error accordingly, e.g., show an error message to the user
     }
 }
-
 
 async function get_movie_by_id(id) {
     try {
@@ -377,8 +470,6 @@ async function get_tv_by_id(tv_id) {
         throw error;
     }
 }
-
-
 
 async function get_movie_by_trailer(movie_id) {
     try {
@@ -415,12 +506,47 @@ async function get_tv_by_trailer(tv_id) {
     }
 }
 
+async function similar_movie(id) {
+    try {
+        const response = await fetch(`${BASE_URL}/movie/${id}/similar?${API_KEY}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.results;
+        // console.log(data.results)
+    } catch (error) {
+        throw error;
+    }
+}
+async function similar_tv(id) {
+    try {
+        const response = await fetch(`${BASE_URL}/tv/${id}/similar?${API_KEY}`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        return data.results;
+        // console.log(data.results)
+    } catch (error) {
+        throw error;
+    }
+}
 function openNav(){
     document.getElementById("popup-container");
     // document.body.style.overflow = "hidden"
 }
 //END OF MODAL
 
+
+
+
+
+
+
+
+
+/**SEARCH */
 function searchMovie(e) {
 
     e.preventDefault();
