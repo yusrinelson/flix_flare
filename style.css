@@ -697,7 +697,9 @@ button.normal{
 }
 
 /*ABOUT PAGE*/
-
+.about{
+    margin: 20px;
+}
 
 
 
@@ -785,6 +787,9 @@ button.normal{
     .content .left .single-info .heart-icon {
         margin-left: 22%;
     }
+    #newsletter .form {
+        width: 70%;
+    }
 
 }
 
@@ -827,5 +832,15 @@ button.normal{
         margin: 20px 40px;
         grid-template-columns: 100% 1fr;
     }
+    #newsletter{
+        padding: 40px 20px;
+    }
+    #newsletter .form {
+        width: 100%;
+    }
+    footer .copyright {
+        text-align: start;
+    }
+    
 
 }
