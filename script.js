@@ -15,6 +15,17 @@ const topRatedS = document.getElementById("topRatedS");
 
 const popup_container = document.getElementById("popup-container");
 
+const prev = document.getElementById("prev");
+const current = document.getElementById("current");
+const next = document.getElementById("next");
+const pagination = document.getElementById("pagination");
+
+let prevPage = 1;
+let currentPage = 1;
+let nextPage = 2;
+let lastUrl = "";
+let totalPages = 100;
+
 
 const genres =[
     {"id":28,"name":"Action"},
@@ -116,6 +127,7 @@ function clearBtn(){
 
 
 function fetchData(url, displayElement) {
+    lastUrl = url
     fetch(url)
         .then(res => res.json())
         .then(data => {
@@ -126,6 +138,27 @@ function fetchData(url, displayElement) {
             if(data.results.length && displayData !== 0){
                 displayData(data.results, displayElement);
                 console.log(data.results)
+                currentPage = data.page;
+                prevPage = currentPage - 1
+                nextPage = currentPage + 1;
+                totalPages = data.total_pages;
+
+                current.innerText = currentPage
+                if(currentPage <= 1){
+                    prev.classList.add("disabled");
+                    next.classList.remove("disabled");
+                }else if(currentPage >= totalPages){
+                    prev.classList.remove("disabled");
+                    next.classList.add("disabled");
+                }else{
+                    prev.classList.remove("disabled");
+                    next.classList.remove("disabled");
+                }
+                form.scrollIntoView({behavior : "smooth"})
+                if(pagination){
+                    pagination.style.display = "none"
+                }
+                
             }else{
                 if(displayElement){
                     displayElement.innerHTML = `<h1 class="no-results">NO RESULTS FOUND<h1>`
@@ -256,7 +289,7 @@ async function show_popup(id) {
             </div>
 
             <section class="s1">
-                <h2>Similar Movies</h2>
+                <h4>Similar Movies</h4>
             </section>
             <div id="similarMoviesList"></div> 
         </div>
@@ -386,7 +419,7 @@ async function show_popup1(tv_id) {
             </div>
 
             <section class="s1">
-                <h2>Similar Shows</h2>
+                <h4>Similar Shows</h4>
             </section>
             <div id="similarMoviesList"></div> 
         </div>        
@@ -539,13 +572,6 @@ function openNav(){
 //END OF MODAL
 
 
-
-
-
-
-
-
-
 /**SEARCH */
 function searchMovie(e) {
 
@@ -575,6 +601,37 @@ if(form){
     form.addEventListener("submit", searchMovie);
 }       
 
+/**PAGINATION */
+prev.addEventListener("click", () => {
+    if(prevPage > 0){
+        pageCall(prevPage);
+    }
+})
+
+next.addEventListener("click", () => {
+    if(nextPage <= totalPages){
+        pageCall(nextPage);
+    }
+})
+
+function pageCall(page){
+    let urlSplit = lastUrl.split("?");
+    let queryParams = urlSplit[1].split("&");
+    let key = queryParams[queryParams.length -1].split("=");
+    if(key[0] != "page"){
+        let url = lastUrl + "&page=" + page
+        fetchData(url, movieList)
+        fetchData(url, showsList)
+    }else{
+        key[1] = page.toString();
+        let a = key.join("=");
+        queryParams[queryParams.length -1] = a
+        let b = queryParams.join('&');
+        let url = urlSplit[0] + "?" + b
+        fetchData(url, movieList)
+        fetchData(url,showsList)
+    }
+}
 
 
 // Initial data fetching
@@ -602,4 +659,23 @@ function getColor(vote) {
     } else {
         return "red";
     }
+}
+/**
+ * index
+ * fucntion that toggles the burger icon
+ */
+const bar = document.getElementById("bar");
+const close = document.getElementById("close");
+const navbar = document.getElementById("navbar");
+
+if(bar){
+    bar.addEventListener("click", () => {
+        navbar.classList.add("active");
+    })
+}
+
+if(close){
+    close.addEventListener("click", () => {
+        navbar.classList.remove("active");
+    })
 }
