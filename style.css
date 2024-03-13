@@ -790,6 +790,21 @@ button.normal{
     #newsletter .form {
         width: 70%;
     }
+    /*contact page*/
+    #hero.contact {
+        height: 300px;
+    }
+    #form-details {
+        margin: 20px;
+        padding: 15px 0 15px 0;
+    }
+    #form-details form h2 {
+        font-size: 30px;
+        line-height: 20px;
+    }
+    #form-details form {
+        width: 90%;
+    }
 
 }
 
@@ -808,7 +823,7 @@ button.normal{
         margin-left: 0;
     }
     .movie {
-        width: 180px;
+        width: 45%;
         margin: 5px;
     }
     /**MODAL*/
@@ -877,7 +892,7 @@ button.normal{
     
 }
 
-@media (max-width:3750px){
+@media (max-width:376px){
     #header {
         padding: 20px 20px;
     }
@@ -892,7 +907,7 @@ button.normal{
         margin-left: 7px;
     }
     .movie {
-        width: 162px;
+        width: 48%;
         margin: 3px;
     }
     .movie-info {
