@@ -143,7 +143,10 @@ function fetchData(url, displayElement) {
                 nextPage = currentPage + 1;
                 totalPages = data.total_pages;
 
-                current.innerText = currentPage
+                if(current.innerText){
+                    current.innerText = currentPage
+                }
+                
                 if(currentPage <= 1){
                     prev.classList.add("disabled");
                     next.classList.remove("disabled");
@@ -288,7 +291,7 @@ async function show_popup(id) {
                     web-share" allowfullscreen></iframe>` : `<img src="http://via.placeholder.com/1080x1580" width="300px" alt="No Trailer Available">`}
             </div>
 
-            <section class="s1">
+            <section class="s1" id="similar">
                 <h4>Similar Movies</h4>
             </section>
             <div id="similarMoviesList"></div> 
@@ -418,7 +421,7 @@ async function show_popup1(tv_id) {
                 web-share" allowfullscreen></iframe>` : `<img src="http://via.placeholder.com/1080x1580" width="300px"alt="No Trailer Available">`}
             </div>
 
-            <section class="s1">
+            <section class="s1" id="similar">
                 <h4>Similar Shows</h4>
             </section>
             <div id="similarMoviesList"></div> 
@@ -602,34 +605,58 @@ if(form){
 }       
 
 /**PAGINATION */
-prev.addEventListener("click", () => {
-    if(prevPage > 0){
-        pageCall(prevPage);
-    }
-})
+if(prev){
+    prev.addEventListener("click", () => {
+        if(prevPage > 0){
+            pageCall(prevPage);
+        }
+    })
+}
+if(next){
+    next.addEventListener("click", () => {
+        if(nextPage <= totalPages){
+            pageCall(nextPage);
+        }
+    })
+}
 
-next.addEventListener("click", () => {
-    if(nextPage <= totalPages){
-        pageCall(nextPage);
-    }
-})
 
 function pageCall(page){
     let urlSplit = lastUrl.split("?");
     let queryParams = urlSplit[1].split("&");
     let key = queryParams[queryParams.length -1].split("=");
     if(key[0] != "page"){
-        let url = lastUrl + "&page=" + page
-        fetchData(url, movieList)
-        fetchData(url, showsList)
+        if(movieList){
+            let url = API_URL + "&page=" + page
+            fetchData(url, movieList)
+            console.log(url)
+        }
+        if(showsList){
+            let url = API_URL1 + "&page=" + page
+            fetchData(url, showsList)
+            console.log(url)
+        }
+
     }else{
         key[1] = page.toString();
         let a = key.join("=");
         queryParams[queryParams.length -1] = a
         let b = queryParams.join('&');
-        let url = urlSplit[0] + "?" + b
-        fetchData(url, movieList)
-        fetchData(url,showsList)
+        if(movieList){
+            let url = urlSplit[0] + "?" + b
+            fetchData(url, movieList)
+            console.log(url)
+        }
+        if(showsList){
+            let url = urlSplit[0] + "?" + b
+            fetchData(url,showsList)
+            console.log(url)
+        }
+        
+        
+        
+      
+      
     }
 }
 
@@ -660,6 +687,7 @@ function getColor(vote) {
         return "red";
     }
 }
+
 /**
  * index
  * fucntion that toggles the burger icon

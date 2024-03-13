@@ -907,7 +907,7 @@ button.normal{
         margin-left: 7px;
     }
     .movie {
-        width: 48%;
+        width: 40%;
         margin: 3px;
     }
     .movie-info {
@@ -962,7 +962,7 @@ button.normal{
         height: 250px;
     }
     .s1#similar {
-        margin-left: 35px;
+        margin-left: 46px;
     }
     #similarMoviesList {
         margin-bottom: 50px;
