@@ -794,6 +794,9 @@ button.normal{
 }
 
 @media (max-width:577px){
+    #header {
+        padding: 20px 30px;
+    }
     #hero h1 {
         font-size: 30px;
     }
@@ -802,6 +805,7 @@ button.normal{
     }
     .s1 h4 {
         font-size: 20px;
+        margin-left: 0;
     }
     .movie {
         width: 180px;
@@ -817,12 +821,22 @@ button.normal{
     .right {
         margin-left: 60px;
     }
+    .single-info ul {
+        flex-wrap: wrap;
+        font-size: 20px;
+    }
+    .right .movie-overview h2 {
+        font-size: 25px;
+    }
+    .right .movie-overview p {
+        font-size: 19px;
+    }
     .trailer iframe {
         margin-left: 50px;
         width: 100%;
     }
-    .s1, h4 {
-        margin-left: 28px;
+    .s1#similar {
+        margin-left: 40px;
     }
     #similarMoviesList {
         margin-bottom: 50px;
@@ -841,6 +855,121 @@ button.normal{
     footer .copyright {
         text-align: start;
     }
+      /*contact page*/
+      #hero.contact {
+        height: 200px;
+    }
+    #form-details {
+        margin: 10px;
+        padding: 10px 0 10px 0;
+    }
+    #form-details form h2 {
+        font-size: 20px;
+        line-height: 15px;
+    }
+    #form-details form {
+        width: 90%;
+    }
+    button.normal {
+        font-weight: 500;
+        padding: 10px 20px;
+    }
     
+}
 
+@media (max-width:3750px){
+    #header {
+        padding: 20px 20px;
+    }
+    #hero h1 {
+        font-size: 18px;
+    }
+    #hero h4 {
+        font-size: 10px;
+        font-weight: 300;
+    }
+    .s1, h4 {
+        margin-left: 7px;
+    }
+    .movie {
+        width: 162px;
+        margin: 3px;
+    }
+    .movie-info {
+        padding: 10px 10px 14px 10px;
+    }
+    .movie-info h3{
+        font-size: 12px;
+        font-weight: 400;
+        margin-bottom: 0;
+    }
+    .movie-info h5 {
+        font-size: 12px;
+        font-weight: 300;
+    }
+
+    /*Modal*/
+    .poster-img {
+        margin-left: -30%;
+        width: 250px;
+        height: 350px;
+    }
+    .content .left .single-info .heart-icon {
+        margin-left: -20%;
+    }
+    .right h1 {
+        font-size: 32px;
+    }
+    .right h3 {
+        font-size: 20px;
+    }
+    .right .movie-overview h2 {
+        font-size: 25px;
+    }
+    .right .movie-overview p {
+        font-size: 15px;
+    }
+    .genres ul {
+        flex-wrap: wrap;
+        font-size: 15px;
+    }
+    .single-info ul {
+        flex-wrap: wrap;
+        font-size: 15px;
+    }
+    .trailer h2 {
+        position: absolute;
+        font-size: 30px;
+    }
+    .trailer iframe {
+        margin-left: 55px;
+        width: 87%;
+        height: 250px;
+    }
+    .s1#similar {
+        margin-left: 35px;
+    }
+    #similarMoviesList {
+        margin-bottom: 50px;
+        padding-left: 50px;
+    }
+    /*contact page*/
+    #hero.contact {
+        height: 200px;
+    }
+    #form-details {
+        margin: 10px;
+        padding: 10px 0 10px 0;
+    }
+    #form-details form h2 {
+        font-size: 20px;
+        line-height: 15px;
+    }
+    #form-details form {
+        width: 90%;
+    }
+    button.normal {
+        font-weight: 500;
+        padding: 10px 20px;
+    }
 }
