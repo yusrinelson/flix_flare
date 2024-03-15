@@ -293,7 +293,7 @@ main{
 }
 
 .tag.highlight{
-    background-color: red;
+    border-color: #d1c814;
 }
 .tag:hover{
     border: 1px solid yellow;
