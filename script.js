@@ -631,9 +631,10 @@ function searchMovie(e) {
         fetchData(SEARCH_URL + "&query=" + searchTerm, movieList);
         fetchData(BASE_URL + "/search/tv?" + API_KEY + "&query=" + searchTerm, showsList);
         fetchData(BASE_URL + "/search/multi?" + API_KEY + "&query=" + searchTerm, trending);
-
-        topRatedM.style.display = "none";    //removes when search in progress
-        topRatedS.style.display = "none";
+        
+        if(topRatedM)topRatedM.style.display = "none";    //removes when search in progress
+        if(topRatedS)topRatedS.style.display = "none";
+       
         const elementsToRemove = document.querySelectorAll(".s1");
         elementsToRemove.forEach(element => {
         element.parentNode.removeChild(element);
