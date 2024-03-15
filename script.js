@@ -47,7 +47,25 @@ const genres =[
     {"id":53,"name":"Thriller"},
     {"id":10752,"name":"War"},
     {"id":37,"name":"Western"}
-    ] 
+]
+const genres1= [
+    {"id":10759,"name":"Action & Adventure"},
+    {"id":16,"name":"Animation"},
+    {"id":35,"name":"Comedy"},
+    {"id":80,"name":"Crime"},
+    {"id":99,"name":"Documentary"},
+    {"id":18,"name":"Drama"},
+    {"id":10751,"name":"Family"},
+    {"id":10762,"name":"Kids"},
+    {"id":9648,"name":"Mystery"},
+    {"id":10763,"name":"News"},
+    {"id":10764,"name":"Reality"},
+    {"id":10765,"name":"Sci-Fi & Fantasy"},
+    {"id":10766,"name":"Soap"},
+    {"id":10767,"name":"Talk"},
+    {"id":10768,"name":"War & Politics"},
+    {"id":37,"name":"Western"}
+]
     
 let selectedGenre = []
     
@@ -60,50 +78,74 @@ function setGenre(){
     if (tagsEl) {
         tagsEl.innerHTML= "";
     }
-
-    genres.forEach(genre => {
-        const t = document.createElement("div");
-        t.classList.add("tag");
-        t.id = genre.id;
-        t.innerText = genre.name;
-        t.addEventListener("click", () => {
-            if(selectedGenre.length == 0){
-                selectedGenre.push(genre.id)
-            }else{
-                if(selectedGenre.includes(genre.id)){
-                    selectedGenre.forEach((id, idx) => {
-                        if(id == genre.id){
-                            selectedGenre.splice(idx)
-                        }
-                    })
-                }else{
-                    selectedGenre.push(genre.id);
-                }
-            }
-            console.log(selectedGenre)
-            fetchData(API_URL + "&with_genres="+ encodeURI(selectedGenre.join(",")), movieList)
-            fetchData(API_URL1 + "&with_genres="+ encodeURI(selectedGenre.join(",")), showsList)
-            highlightSelection()
-        })
-        tagsEl.append(t)
-    })
-}
+    if(movieList){
+        genres.forEach(genre => {
+            const t = document.createElement("div");
+            t.classList.add("tag");
+            t.id = genre.id;
+            t.innerText = genre.name;
+            t.addEventListener("click", () => {
+                toggleGenreSelection(genre.id);
+                filterMoviesByGenres();
+                highlightSelection(); // Update highlighting after genre selection
+            });
+            tagsEl.appendChild(t);
+        });
+    }
+    if(showsList){
+        genres1.forEach(genre => {
+            const t = document.createElement("div");
+            t.classList.add("tag");
+            t.id = genre.id;
+            t.innerText = genre.name;
+            t.addEventListener("click", () => {
+                toggleGenreSelection(genre.id);
+                filterMoviesByGenres();
+                highlightSelection(); // Update highlighting after genre selection
+            });
+            tagsEl.appendChild(t);
+        });
+    }
     
-function highlightSelection(){
-    const tags = document.querySelectorAll(".tag");
-    tags.forEach(tag => {
-        tag.classList.remove("highlight")
-    })
-    clearBtn()
-    if(selectedGenre.length != 0 ){
-        selectedGenre.forEach(id => {
-            const highlightedTag = document.getElementById(id);
-            highlightedTag.classList.add("highlight");
-        })
+    highlightSelection(); // Highlight selected genres initially
+}
+
+function toggleGenreSelection(genreId){
+    const index = selectedGenre.indexOf(genreId);
+    if (index === -1){
+        selectedGenre.push(genreId); // Add genre if not already selected
+    }else{
+        selectedGenre.splice(index, 1);// Remove genre if already selected
     }
 }
+function fetchFilteredMovies() {
+    const genreQuery = selectedGenre.length > 0 ? "&with_genres=" + selectedGenre.join(",") : "";
+    const GENRE_URL = BASE_URL + "/discover/movie?" + API_KEY + genreQuery;
+    const GENRE_URL1 = BASE_URL + "/discover/tv?" + API_KEY + genreQuery;
+    
+    fetchData(GENRE_URL, movieList)
+    fetchData(GENRE_URL1, showsList)
+}
+// Function to filter movies based on selected genres
+function filterMoviesByGenres() {
+    const GENRE_URL = BASE_URL + "/discover/movie?" + API_KEY + "&with_genres=" + selectedGenre.join(",");
+    const GENRE_URL1 = BASE_URL + "/discover/tv?" + API_KEY + "&with_genres=" + selectedGenre.join(",");
+    fetchData(GENRE_URL, movieList);
+    fetchData(GENRE_URL1, showsList);
+}
+    
+function highlightSelection() {
+    const tags = document.querySelectorAll(".tag");
+    tags.forEach(tag => {
+        if (selectedGenre.includes(parseInt(tag.id))) {
+            tag.classList.add("highlight"); // Highlight selected genre
+        } else {
+            tag.classList.remove("highlight"); // Remove highlight if not selected
+        }
+    });
 
-
+    clearBtn(); // Update clear button highlighting
+}
 function clearBtn(){
     let clearBtn = document.getElementById("clear")
     
@@ -158,6 +200,8 @@ function fetchData(url, displayElement) {
                     next.classList.remove("disabled");
                 }
                 form.scrollIntoView({behavior : "smooth"})
+
+
                 if(pagination){
                     pagination.style.display = "none"
                 }
@@ -213,10 +257,11 @@ function displayData(data, displayElement) {
             })
 
         }
-
     });
 
 }
+
+
 
 /**MODAL */
 async function show_popup(id) {
@@ -575,6 +620,7 @@ function openNav(){
 //END OF MODAL
 
 
+
 /**SEARCH */
 function searchMovie(e) {
 
@@ -668,8 +714,7 @@ const API_URL2 = BASE_URL + "/trending/all/day?" + API_KEY;
 const API_TOP_RATEDM = BASE_URL + "/movie/top_rated?" + API_KEY;
 const API_TOP_RATEDS = BASE_URL + "/tv/top_rated?" + API_KEY;
 
-
-
+fetchFilteredMovies(); // Fetch initial data with genre filtering
 
 fetchData(API_URL, movieList);
 fetchData(API_URL1, showsList);
