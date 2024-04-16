@@ -295,9 +295,9 @@ main{
 .tag.highlight{
     border-color: #d1c814;
 }
-.tag:hover{
+/* .tag:hover{
     border: 1px solid yellow;
-}
+} */
 .no-results{
     color: #fff;
 }
@@ -922,7 +922,7 @@ button.normal{
         font-size: 12px;
         font-weight: 300;
     }
-
+   
     /*Modal*/
     .poster-img {
         margin-left: -30%;

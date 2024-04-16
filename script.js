@@ -173,10 +173,6 @@ function fetchData(url, displayElement) {
     fetch(url)
         .then(res => res.json())
         .then(data => {
-            // if (displayElement) {
-            //     displayData(data.results, displayElement);
-            //     console.log(data.results)
-            // }
             if(data.results.length && displayData !== 0){
                 displayData(data.results, displayElement);
                 console.log(data.results)
@@ -232,7 +228,7 @@ function displayData(data, displayElement) {
                 <span class="${getColor(vote_average)}">${vote_average ? vote_average.toFixed(1) : vote_average ? vote_average.toFixed(1) : "N/A" }</span>
             </div>
             <div class="overview">
-                <i class="fa-solid fa-play" id="info"></i>
+             
                 <i class="fa-solid fa-circle-info" id="${id}"></i>
             </div>
         `;
