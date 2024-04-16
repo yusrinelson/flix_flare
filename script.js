@@ -353,7 +353,7 @@ async function show_popup(id) {
                 <span class="${getColor(vote_average)}">${vote_average ? vote_average.toFixed(1) : vote_average ? vote_average.toFixed(1) : "N/A" }</span>
             </div>
             <div class="overview">
-                <i class="fa-solid fa-play" id="info"></i>
+                
                 <i class="fa-solid fa-circle-info" id="${id}"></i>
             </div>
 
